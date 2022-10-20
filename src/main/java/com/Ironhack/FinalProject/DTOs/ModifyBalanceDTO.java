@@ -7,6 +7,9 @@ public class ModifyBalanceDTO {
     private Long accountId;
     private BigDecimal amount;
 
+    public ModifyBalanceDTO() {
+    }
+
     public ModifyBalanceDTO(Long accountId, BigDecimal amount) {
         setAccountId(accountId);
         setAmount(amount);

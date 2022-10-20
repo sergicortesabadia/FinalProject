@@ -9,6 +9,9 @@ public class TransferDTO {
     private Long receiverAccountNumber;
     private Long receiverId;
 
+    public TransferDTO() {
+    }
+
     public TransferDTO(Long senderId, Long senderAccountNumber, BigDecimal transfer, Long receiverAccountNumber, Long receiverId) {
         setSenderId(senderId);
         setSenderAccountNumber(senderAccountNumber);

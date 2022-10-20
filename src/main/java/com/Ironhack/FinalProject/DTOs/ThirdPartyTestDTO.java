@@ -7,6 +7,9 @@ public class ThirdPartyTestDTO {
     private Long accountId;
     private String hashedKey;
 
+    public ThirdPartyTestDTO() {
+    }
+
     public ThirdPartyTestDTO(BigDecimal amount, Long accountId, String hashedKey) {
         setAmount(amount);
         setAccountId(accountId);

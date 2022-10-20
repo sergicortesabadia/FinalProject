@@ -6,6 +6,9 @@ public class ThirdPartyDTO {
     private BigDecimal amount;
     private Long accountId;
 
+    public ThirdPartyDTO() {
+    }
+
     public ThirdPartyDTO(BigDecimal amount, Long accountId) {
         setAmount(amount);
         setAccountId(accountId);

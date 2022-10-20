@@ -17,6 +17,9 @@ public class AccountHolderDTO {
         private String accountType;
         private BigDecimal initialBalance;
 
+    public AccountHolderDTO() {
+    }
+
     public AccountHolderDTO(Long id, String accountType, BigDecimal initialBalance) {
         setId(id);
         setAccountType(accountType);

@@ -107,7 +107,7 @@ public class AccountHolderControllerTests {
     @Test
     @DisplayName("Testing showing an account")
     void get_GetBalance_isOk() throws Exception{
-    SecondaryOwnerDTO secondaryOwnerDTO= new SecondaryOwnerDTO(savings1.getAccountNumber(), accountHolder1.getId());
+    SecondaryOwnerDTO secondaryOwnerDTO = new SecondaryOwnerDTO(savings1.getAccountNumber(), accountHolder1.getId());
     String body = objectMapper.writeValueAsString(secondaryOwnerDTO);
     MvcResult mvcResult = mockMvc.perform(get("/show_account/"+accountHolder1.getId()).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
     assertTrue(mvcResult.getResponse().getContentAsString().contains("1500"));

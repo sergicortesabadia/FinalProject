@@ -129,7 +129,7 @@ public class AdminControllerTests {
     @Test
     @DisplayName("Testing create account")
     void post_CreateNewAccount_isOk() throws Exception{
-        CreateAccountDTO createAccountDTO = new CreateAccountDTO(1l, "creditCard",BigDecimal.valueOf(6000));
+        CreateAccountDTO createAccountDTO = new CreateAccountDTO(accountHolder1.getId(), "creditCard",BigDecimal.valueOf(6000));
         String body = objectMapper.writeValueAsString(createAccountDTO);
         MvcResult mvcResult = mockMvc.perform(post("/create_account").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("6000"));

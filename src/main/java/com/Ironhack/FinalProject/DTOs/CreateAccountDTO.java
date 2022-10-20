@@ -8,6 +8,9 @@ public class CreateAccountDTO {
     private String accountType;
     private BigDecimal initialBalance;
 
+    public CreateAccountDTO() {
+    }
+
     public CreateAccountDTO(Long id, String accountType, BigDecimal initialBalance) {
         setId(id);
         setAccountType(accountType);

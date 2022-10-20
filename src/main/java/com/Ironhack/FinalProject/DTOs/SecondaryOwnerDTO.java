@@ -5,6 +5,9 @@ public class SecondaryOwnerDTO {
     private Long accountNumber;
     private Long accountHolderId;
 
+    public SecondaryOwnerDTO() {
+    }
+
     public SecondaryOwnerDTO(Long accountNumber, Long accountHolderId) {
         setAccountNumber(accountNumber);
         setAccountHolderId(accountHolderId);

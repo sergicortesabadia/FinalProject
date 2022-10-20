@@ -18,7 +18,8 @@ public class AccountDTO {
     private Long accountHolderId;
 
 
-
+    public AccountDTO() {
+    }
 
     public AccountDTO(Long accountNumber, AccountStatus accountStatus) {
         setAccountNumber(accountNumber);
