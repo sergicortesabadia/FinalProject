@@ -7,6 +7,6 @@ import java.math.BigDecimal;
 
 public interface ThirdPartyControllerInterface {
 
-    Account thirdPartyAddBalance(ThirdPartyDTO thirdPartyDTO);
-    Account thirdPartySubtractBalance(ThirdPartyDTO thirdPartyDTO);
+    Account thirdPartyAddBalance(ThirdPartyDTO thirdPartyDTO, String hashedKey);
+    Account thirdPartySubtractBalance(ThirdPartyDTO thirdPartyDTO, String hashedKey);
 }

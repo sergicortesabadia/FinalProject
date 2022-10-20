@@ -32,14 +32,12 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
 
-    public Account thirdPartyAddBalance(String hashedKey, BigDecimal amount, Long accountId){
-        if (!thirdPartyRepository.findByHashedKey(hashedKey).isPresent()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+    public Account thirdPartyAddBalance(BigDecimal amount, Long accountId){
         Account account = accountRepository.findById(accountId).get();
         account.getBalance().increaseAmount(amount);
         return accountRepository.save(account);
     }
-    public Account thirdPartySubtractBalance(String hashedKey, BigDecimal amount, Long accountId){
-        if (!thirdPartyRepository.findByHashedKey(hashedKey).isPresent()) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+    public Account thirdPartySubtractBalance(BigDecimal amount, Long accountId){
         BigDecimal zero = BigDecimal.valueOf(0);
         if(savingsRepository.existsById(accountId)){
             Savings savings = savingsRepository.findById(accountId).get();

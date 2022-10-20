@@ -2,13 +2,16 @@ package com.Ironhack.FinalProject.DTOs;
 
 import java.math.BigDecimal;
 
-public class ThirdPartyDTO {
+public class ThirdPartyTestDTO {
     private BigDecimal amount;
     private Long accountId;
+    private String hashedKey;
 
-    public ThirdPartyDTO(BigDecimal amount, Long accountId) {
+    public ThirdPartyTestDTO(BigDecimal amount, Long accountId, String hashedKey) {
         setAmount(amount);
         setAccountId(accountId);
+        setHashedKey(hashedKey);
+
     }
 
     public BigDecimal getAmount() {
@@ -27,4 +30,11 @@ public class ThirdPartyDTO {
         this.accountId = accountId;
     }
 
+    public String getHashedKey() {
+        return hashedKey;
+    }
+
+    public void setHashedKey(String hashedKey) {
+        this.hashedKey = hashedKey;
+    }
 }

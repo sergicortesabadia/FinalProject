@@ -58,24 +58,27 @@ public class AdminControllerTests {
 
 
 
+    Address address1;
+    Address address2;
+    AccountHolder accountHolder1;
+    AccountHolder accountHolder2;
+    Savings savings1;
+    CheckingAccount checkingAccount1;
+    StudentCheckingAccount studentCheckingAccount1;
+    CreditCard creditCard1;
+    Admin admin1;
     @BeforeEach
     public void setUp() {
-        adminRepository.deleteAll();
-        accountHolderRepository.deleteAll();
-        savingsRepository.deleteAll();
-        checkingAccountRepository.deleteAll();
-        studentCheckingAccountRepository.deleteAll();
-        creditCardRepository.deleteAll();
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        Address address1 = new Address("Passeig de la Mare de Deu del Coll 200, 2nda 3ra", "Barcelona", "08032", "Barcelona", "Spain");
-        Address address2 = new Address("Carrer de Cristiano Ronaldo", "Sivenga", "08032", "Fumada", "Jardin");
-        AccountHolder accountHolder1 = new AccountHolder("Sergi", "sergi@gmail.com", 644745537l, "1234", "serkelet", LocalDate.of(1985,12,5), address1);
-        AccountHolder accountHolder2 = new AccountHolder("Oscar", "oscar@gmail.com", 777555111l, "manzana", "sihombre", LocalDate.of(2000,12,5), address2);
-        Savings savings1 = new Savings(new Money(BigDecimal.valueOf(1500)), accountHolder1, 1234);
-        CheckingAccount checkingAccount1 = new CheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder1, 1234);
-        StudentCheckingAccount studentCheckingAccount1 = new StudentCheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
-        CreditCard creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
-        Admin admin1 = new Admin("Bengisu", "bengi", "99eni");
+        address1 = new Address("Passeig de la Mare de Deu del Coll 200, 2nda 3ra", "Barcelona", "08032", "Barcelona", "Spain");
+        address2 = new Address("Carrer de Cristiano Ronaldo", "Sivenga", "08032", "Fumada", "Jardin");
+        accountHolder1 = new AccountHolder("Sergi", "sergi@gmail.com", 644745537l, "1234", "serkelet", LocalDate.of(1985, 12, 5), address1);
+        accountHolder2 = new AccountHolder("Oscar", "oscar@gmail.com", 777555111l, "manzana", "sihombre", LocalDate.of(2000, 12, 5), address2);
+        savings1 = new Savings(new Money(BigDecimal.valueOf(1500)), accountHolder1, 1234);
+        checkingAccount1 = new CheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder1, 1234);
+        studentCheckingAccount1 = new StudentCheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
+        creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
+        admin1 = new Admin("Bengisu", "bengi", "99eni");
         adminRepository.save(admin1);
         accountHolderRepository.save(accountHolder1);
         accountHolderRepository.save(accountHolder2);
@@ -93,7 +96,7 @@ public class AdminControllerTests {
     @Test
     @DisplayName("Testing whether money is added")
     void patch_addBalance_isOk() throws Exception{
-        ModifyBalanceDTO modifyBalanceDTO = new ModifyBalanceDTO(1l, BigDecimal.valueOf(2000));
+        ModifyBalanceDTO modifyBalanceDTO = new ModifyBalanceDTO(savings1.getAccountNumber(), BigDecimal.valueOf(2000));
         String body = objectMapper.writeValueAsString(modifyBalanceDTO);
         MvcResult mvcResult = mockMvc.perform(patch("/add_balance").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("3500"));
@@ -101,7 +104,7 @@ public class AdminControllerTests {
     @Test
     @DisplayName("Testing whether money is substracted")
     void patch_decreaseBalance_isOk() throws Exception{
-        ModifyBalanceDTO modifyBalanceDTO = new ModifyBalanceDTO(1l, BigDecimal.valueOf(500));
+        ModifyBalanceDTO modifyBalanceDTO = new ModifyBalanceDTO(savings1.getAccountNumber(), BigDecimal.valueOf(500));
         String body = objectMapper.writeValueAsString(modifyBalanceDTO);
         MvcResult mvcResult = mockMvc.perform(patch("/add_balance").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("1000"));
@@ -109,7 +112,7 @@ public class AdminControllerTests {
     @Test
     @DisplayName("Testing change of status")
     void patch_changeStatus_isOk() throws Exception{
-        AccountDTO accountDTO = new AccountDTO(3l, AccountStatus.FROZEN);
+        AccountDTO accountDTO = new AccountDTO(studentCheckingAccount1.getAccountNumber(), AccountStatus.FROZEN);
         String body = objectMapper.writeValueAsString(accountDTO);
         MvcResult mvcResult = mockMvc.perform(patch("/change_status").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("FROZEN"));
@@ -152,7 +155,7 @@ public class AdminControllerTests {
     @Test
     @DisplayName("Testing change of status")
     void patch_AssignSecondaryOwner_isOk() throws Exception {
-        SecondaryOwnerDTO secondaryOwnerDTO = new SecondaryOwnerDTO(4l, 1l);
+        SecondaryOwnerDTO secondaryOwnerDTO = new SecondaryOwnerDTO(creditCard1.getAccountNumber(), accountHolder1.getId());
         String body = objectMapper.writeValueAsString(secondaryOwnerDTO);
         MvcResult mvcResult = mockMvc.perform(patch("/assign_secondary_owner").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("Sergi"));

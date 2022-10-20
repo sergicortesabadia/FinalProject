@@ -68,12 +68,6 @@ public class AccountHolderControllerTests {
     Admin admin1;
     @BeforeEach
     public void setUp() {
-      /*  adminRepository.deleteAll();
-        accountHolderRepository.deleteAll();
-        savingsRepository.deleteAll();
-        checkingAccountRepository.deleteAll();
-        studentCheckingAccountRepository.deleteAll();
-        creditCardRepository.deleteAll();*/
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         address1 = new Address("Passeig de la Mare de Deu del Coll 200, 2nda 3ra", "Barcelona", "08032", "Barcelona", "Spain");
          address2 = new Address("Carrer de Cristiano Ronaldo", "Sivenga", "08032", "Fumada", "Jardin");
@@ -95,7 +89,12 @@ public class AccountHolderControllerTests {
 
     @AfterEach
     public void tearUp() {
-
+    /*    adminRepository.deleteAll();
+        accountHolderRepository.deleteAll();
+        savingsRepository.deleteAll();
+        checkingAccountRepository.deleteAll();
+        studentCheckingAccountRepository.deleteAll();
+        creditCardRepository.deleteAll();*/
     }
     @Test
     @DisplayName("Testing transfer money")
@@ -108,16 +107,15 @@ public class AccountHolderControllerTests {
     @Test
     @DisplayName("Testing showing an account")
     void get_GetBalance_isOk() throws Exception{
-    SecondaryOwnerDTO secondaryOwnerDTO= new SecondaryOwnerDTO(1l, 1l);
+    SecondaryOwnerDTO secondaryOwnerDTO= new SecondaryOwnerDTO(savings1.getAccountNumber(), accountHolder1.getId());
     String body = objectMapper.writeValueAsString(secondaryOwnerDTO);
-    MvcResult mvcResult = mockMvc.perform(get("/show_account/1").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
+    MvcResult mvcResult = mockMvc.perform(get("/show_account/"+accountHolder1.getId()).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
     assertTrue(mvcResult.getResponse().getContentAsString().contains("1500"));
 }
     @Test
     @DisplayName("Testing showing all accounts by an account holder")
     void get_ShowAllAccountsByAccountHolder() throws Exception{
-        Long accountHolderId = 1l;
-        String body = objectMapper.writeValueAsString(accountHolderId);
+        String body = objectMapper.writeValueAsString(accountHolder1.getId());
         MvcResult mvcResult = mockMvc.perform(get("/user/show_accounts").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("1500"));
     }
@@ -127,7 +125,7 @@ public class AccountHolderControllerTests {
         Address address = new Address("Carrer Concili de Trento", "Barcelona", "08018", "Barcelona", "Spain");
         AccountHolder accountHolder = new AccountHolder("Karl", "karl@gmail.com", 555666777l, "1234", "franz", LocalDate.of(1965, 11, 15), address);
         String body = objectMapper.writeValueAsString(accountHolder);
-        MvcResult mvcResult = mockMvc.perform(post("/create_admin").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
+        MvcResult mvcResult = mockMvc.perform(post("/create_user").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("Karl"));
     }
 }

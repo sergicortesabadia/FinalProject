@@ -6,10 +6,7 @@ import com.Ironhack.FinalProject.usercontrollers.interfaces.ThirdPartyController
 import com.Ironhack.FinalProject.userservices.interfaces.ThirdPartyServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ThirdPartyController implements ThirdPartyControllerInterface {
@@ -18,13 +15,13 @@ public class ThirdPartyController implements ThirdPartyControllerInterface {
 
     @PatchMapping("/third_party/add")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Account thirdPartyAddBalance(@RequestBody ThirdPartyDTO thirdPartyDTO){
-      return thirdPartyServiceInterface.thirdPartyAddBalance(thirdPartyDTO.getHashedKey(), thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId());
+    public Account thirdPartyAddBalance(@RequestBody ThirdPartyDTO thirdPartyDTO, @RequestHeader String hashedKey){
+      return thirdPartyServiceInterface.thirdPartyAddBalance(thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId());
     }
     @PatchMapping("/third_party/decrease")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Account thirdPartySubtractBalance(@RequestBody ThirdPartyDTO thirdPartyDTO){
-        return thirdPartyServiceInterface.thirdPartySubtractBalance(thirdPartyDTO.getHashedKey(), thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId());
+    public Account thirdPartySubtractBalance(@RequestBody ThirdPartyDTO thirdPartyDTO, @RequestHeader String hashedKey){
+        return thirdPartyServiceInterface.thirdPartySubtractBalance(thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId());
     }
 
 }
