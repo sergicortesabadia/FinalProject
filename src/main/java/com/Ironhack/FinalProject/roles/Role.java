@@ -10,39 +10,37 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String role;
- //   @ManyToOne
-  //  private User user;
+    @Enumerated
+    private RolesEnum role;
+   @ManyToOne
+   private User user;
 
     public Role() {
     }
 
-    public Role(String role/*, User user*/) {
+    public Role(RolesEnum role, User user) {
         setRole(role);
-//        setUser(user);
+        setUser(user);
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
-    public String getRole() {
+    public RolesEnum getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RolesEnum role) {
         this.role = role;
     }
 
-  /*  public User getUser() {
+    public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
-    }*/
+    }
 }

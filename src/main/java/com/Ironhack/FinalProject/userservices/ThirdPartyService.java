@@ -32,12 +32,18 @@ public class ThirdPartyService implements ThirdPartyServiceInterface {
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
 
-    public Account thirdPartyAddBalance(BigDecimal amount, Long accountId){
+    public Account thirdPartyAddBalance(BigDecimal amount, Long accountId, Long thirdPartyId, String hashedKey){
+        if (!accountRepository.findById(accountId).isPresent()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        ThirdParty thirdParty = thirdPartyRepository.findByHashedKey(hashedKey).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        if (thirdParty.getId() != thirdPartyId) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         Account account = accountRepository.findById(accountId).get();
         account.getBalance().increaseAmount(amount);
         return accountRepository.save(account);
     }
-    public Account thirdPartySubtractBalance(BigDecimal amount, Long accountId){
+    public Account thirdPartySubtractBalance(BigDecimal amount, Long accountId, Long thirdPartyId, String hashedKey){
+        if (!accountRepository.findById(accountId).isPresent()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found");
+        ThirdParty thirdParty = thirdPartyRepository.findByHashedKey(hashedKey).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        if (thirdParty.getId() != thirdPartyId) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         BigDecimal zero = BigDecimal.valueOf(0);
         if(savingsRepository.existsById(accountId)){
             Savings savings = savingsRepository.findById(accountId).get();

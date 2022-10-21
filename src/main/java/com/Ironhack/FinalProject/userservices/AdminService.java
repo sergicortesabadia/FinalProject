@@ -1,17 +1,17 @@
 package com.Ironhack.FinalProject.userservices;
 
-import com.Ironhack.FinalProject.DTOs.AccountDTO;
-import com.Ironhack.FinalProject.DTOs.AccountHolderDTO;
-import com.Ironhack.FinalProject.DTOs.CreateAccountDTO;
-import com.Ironhack.FinalProject.DTOs.ModifyBalanceDTO;
+import com.Ironhack.FinalProject.DTOs.*;
 import com.Ironhack.FinalProject.accountmodels.*;
 import com.Ironhack.FinalProject.accountservices.interfaces.CheckingAccountServiceInterface;
 import com.Ironhack.FinalProject.accountservices.interfaces.CreditCardServiceInterface;
 import com.Ironhack.FinalProject.accountservices.interfaces.SavingsServiceInterface;
 import com.Ironhack.FinalProject.accountservices.interfaces.StudentCheckingAccountServiceInterface;
+import com.Ironhack.FinalProject.embeddables.Address;
 import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.repositories.*;
+import com.Ironhack.FinalProject.roles.Role;
+import com.Ironhack.FinalProject.roles.RolesEnum;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import com.Ironhack.FinalProject.usermodels.Admin;
 import com.Ironhack.FinalProject.usermodels.ThirdParty;
@@ -71,12 +71,12 @@ public Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO){
     return accountRepository.save(account);
     }
 
-    public Account createNewUserAndAccount(AccountHolderDTO accountHolderDTO){
-    AccountHolder accountHolder = new AccountHolder(accountHolderDTO.getName(), accountHolderDTO.getMail(), accountHolderDTO.getPhone(), accountHolderDTO.getBirthDate(), accountHolderDTO.getPrimaryAddress());
-  //  userRepository.save(accountHolder);
+    public Account createNewUserAndAccount(AccountHolderCreationDTO accountHolderCreationDTO){
+    Address address = new Address(accountHolderCreationDTO.getStreet(), accountHolderCreationDTO.getCity(), accountHolderCreationDTO.getPostalCode(), accountHolderCreationDTO.getProvinceState(), accountHolderCreationDTO.getCountry());
+    AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(),"1234", accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
     accountHolderRepository.save(accountHolder);
-    String accountType = accountHolderDTO.getAccountType();
-    BigDecimal initialBalance = accountHolderDTO.getInitialBalance();
+    String accountType = accountHolderCreationDTO.getAccountType();
+    BigDecimal initialBalance = accountHolderCreationDTO.getInitialBalance();
     while(true){
         switch(accountType){
             case "savingsAccount":
@@ -139,10 +139,23 @@ public Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO){
     return accountRepository.save(account);
     }
     public Admin createAdmin (Admin admin){
+    admin.addRole(new Role(RolesEnum.ADMIN, admin));
     return adminRepository.save(admin);
     }
     public ThirdParty createThirdParty(ThirdParty thirdParty){
+    thirdParty.addRole(new Role(RolesEnum.THIRD_PARTY, thirdParty));
     return thirdPartyRepository.save(thirdParty);
     }
-
+    public AccountHolder createAddress(AddressDTO addressDTO){
+    AccountHolder accountHolder = accountHolderRepository.findById(addressDTO.getAccountHolderId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    Address address = new Address(addressDTO.getStreet(), addressDTO.getCity(), addressDTO.getPostalCode(), addressDTO.getProvinceState(), addressDTO.getCountry());
+    accountHolder.setPrimaryAddress(address);
+    return accountHolderRepository.save(accountHolder);
+    }
+    public AccountHolder createMailingAddress(AddressDTO addressDTO){
+        AccountHolder accountHolder = accountHolderRepository.findById(addressDTO.getAccountHolderId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        Address address = new Address(addressDTO.getStreet(), addressDTO.getCity(), addressDTO.getPostalCode(), addressDTO.getProvinceState(), addressDTO.getCountry());
+        accountHolder.setMailingAddress(address);
+        return accountHolderRepository.save(accountHolder);
+    }
 }

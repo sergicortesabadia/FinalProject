@@ -14,16 +14,18 @@ import java.util.List;
 public interface AdminControllerInterface {
     Account addBalance(ModifyBalanceDTO modifyBalanceDTO);
     Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO);
-    Account createNewUserAndAccount(AccountHolderDTO accountHolderDTO);
+    Account createNewUserAndAccount(AccountHolderCreationDTO accountHolderCreationDTO);
     Account changeAccountStatus(AccountDTO accountDTO);
     void deleteAccount(Long accountNumber);
     List<User> getAllUsers();
     List<Account> getAllAccounts();
     Account createNewAccount(CreateAccountDTO createAccountDTO);
     Account assignSecondaryOwner (SecondaryOwnerDTO secondaryOwnerDTO);
-    AccountHolder createUserAccount(AccountHolder accountHolder);
+    AccountHolder createUserAccount(AccountHolderCreationDTO accountHolderCreationDTO);
     Admin createAdmin (Admin admin);
     ThirdParty createThirdParty(ThirdParty thirdParty);
+    AccountHolder createAddress(AddressDTO addressDTO);
+    AccountHolder createMailingAddress(AddressDTO addressDTO);
 
 }
 

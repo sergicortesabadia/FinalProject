@@ -6,7 +6,7 @@ import com.Ironhack.FinalProject.usermodels.ThirdParty;
 import java.math.BigDecimal;
 
 public interface ThirdPartyServiceInterface {
-    Account thirdPartyAddBalance(BigDecimal amount, Long accountId);
-    Account thirdPartySubtractBalance(BigDecimal amount, Long accountId);
+    Account thirdPartyAddBalance(BigDecimal amount, Long accountId, Long thirdPartyId, String hashedKey);
+    Account thirdPartySubtractBalance(BigDecimal amount, Long accountId, Long thirdPartyId, String hashedKey);
 
 }

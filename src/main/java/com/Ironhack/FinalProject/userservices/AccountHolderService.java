@@ -1,20 +1,26 @@
 package com.Ironhack.FinalProject.userservices;
+import com.Ironhack.FinalProject.DTOs.AccountHolderCreationDTO;
 import com.Ironhack.FinalProject.DTOs.AccountHolderDTO;
+import com.Ironhack.FinalProject.DTOs.AddressDTO;
 import com.Ironhack.FinalProject.DTOs.TransferDTO;
 import com.Ironhack.FinalProject.accountmodels.*;
 import com.Ironhack.FinalProject.accountservices.interfaces.CheckingAccountServiceInterface;
 import com.Ironhack.FinalProject.accountservices.interfaces.CreditCardServiceInterface;
 import com.Ironhack.FinalProject.accountservices.interfaces.SavingsServiceInterface;
+import com.Ironhack.FinalProject.embeddables.Address;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.enums.TransactionType;
 import com.Ironhack.FinalProject.repositories.*;
+import com.Ironhack.FinalProject.roles.Role;
+import com.Ironhack.FinalProject.roles.RolesEnum;
 import com.Ironhack.FinalProject.transactions.Transaction;
 import com.Ironhack.FinalProject.transactions.transactionservice.transactionserviceinterface.TransactionServiceInterface;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import com.Ironhack.FinalProject.userservices.interfaces.AccountHolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
@@ -50,9 +56,10 @@ public class AccountHolderService implements AccountHolderServiceInterface {
     @Autowired
     CheckingAccountServiceInterface checkingAccountServiceInterface;
 
-    public Money getBalance(Long accountHolderId, Long accountNumber) {
-        AccountHolder accountHolder = accountHolderRepository.findById(accountHolderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    public Money getBalance(String username, Long accountNumber) {
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
         Account account = accountRepository.findById(accountNumber).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
+        if(!accountHolder.getPrimaryAccountHolderList().contains(account) && !accountHolder.getSecondaryAccountHolderList().contains(account)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         if (account.getPrimaryOwner() == accountHolder || account.getSecondaryOwner() == accountHolder){
             if(savingsRepository.existsById(accountNumber)) {
                 return savingsServiceInterface.addInterestRateOnSavings(accountNumber);
@@ -68,20 +75,23 @@ public class AccountHolderService implements AccountHolderServiceInterface {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "You are not allowed access to this account");
         }
     }
-    public List<Account> showAllAccountsByAccountHolder(Long accountHolderId) {
-        AccountHolder accountHolder = accountHolderRepository.findById(accountHolderId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    public List<Account> showAllAccountsByAccountHolder(String username) {
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        if(accountHolder.getPrimaryAccountHolderList().isEmpty() && accountHolder.getSecondaryAccountHolderList().isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND,"You have no accounts");
         List<Account> accountList = new ArrayList<>();
         accountList.addAll(accountHolder.getPrimaryAccountHolderList());
         accountList.addAll(accountHolder.getSecondaryAccountHolderList());
         return accountList;
     }
 
-    public BigDecimal transferMoneyByAccountType(Long senderID, Long senderAccountId, BigDecimal transfer, Long receiverAccountId, Long receiverId) {
+    public BigDecimal transferMoneyByAccountType(String username, Long senderAccountId, BigDecimal transfer, Long receiverAccountId, Long receiverId) {
         Account senderAccount = accountRepository.findById(senderAccountId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
         if (senderAccount.getAccountStatus() == AccountStatus.FROZEN) throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         Account receiverAccount = accountRepository.findById(receiverAccountId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Account not found"));
-        AccountHolder sender = accountHolderRepository.findById(senderID).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        AccountHolder sender = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        if(!sender.getPrimaryAccountHolderList().contains(senderAccount) && !sender.getSecondaryAccountHolderList().contains(senderAccount)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         AccountHolder receiver = accountHolderRepository.findById(receiverId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        if(!receiver.getPrimaryAccountHolderList().contains(receiverAccount) && !receiver.getSecondaryAccountHolderList().contains(receiverAccount)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         Money sent = new Money(senderAccount.getBalance().decreaseAmount(transfer));
         BigDecimal zero = new BigDecimal(0);
         if (senderAccount.getBalance().getAmount().subtract(transfer).compareTo(zero) < 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not enough funds");
@@ -101,7 +111,7 @@ public class AccountHolderService implements AccountHolderServiceInterface {
         }
     }
     public BigDecimal transferFromSavings(AccountHolder sender, AccountHolder receiver, Savings senderSavings, BigDecimal transfer, Account receiverAccount, Money sent, Money received) {
-        if (sent.getAmount().compareTo(senderSavings.getMinimumBalance().getAmount()) < 0) {
+        if (sent.getAmount().compareTo(senderSavings.getMinimumBalance().getAmount()) == -1) {
             sent.decreaseAmount(senderSavings.getPenaltyFee().getAmount());
         }
         senderSavings.setBalance(sent);
@@ -147,8 +157,24 @@ public class AccountHolderService implements AccountHolderServiceInterface {
         transactionServiceInterface.detectFraudSecond(sender.getId(), newTransaction);
         return senderStudentCheckingAccount.getBalance().getAmount();
     }
-    public AccountHolder createUserAccount(AccountHolder accountHolder){
+    public AccountHolder createUserAccount(AccountHolderCreationDTO accountHolderCreationDTO){
+        Address address = new Address(accountHolderCreationDTO.getStreet(), accountHolderCreationDTO.getCity(), accountHolderCreationDTO.getPostalCode(), accountHolderCreationDTO.getProvinceState(), accountHolderCreationDTO.getCountry());
+        AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(), "1234", accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
+        accountHolder.addRole(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder));
         userRepository.save(accountHolder);
         return accountHolderRepository.save(accountHolder);
     }
+    public AccountHolder createAddressAsUser(String username, AddressDTO addressDTO){
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        Address address = new Address(addressDTO.getStreet(), addressDTO.getCity(), addressDTO.getPostalCode(), addressDTO.getProvinceState(), addressDTO.getCountry());
+        accountHolder.setPrimaryAddress(address);
+        return accountHolderRepository.save(accountHolder);
+    }
+    public AccountHolder createMailingAddressAsUser(String username, AddressDTO addressDTO){
+        AccountHolder accountHolder = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        Address address = new Address(addressDTO.getStreet(), addressDTO.getCity(), addressDTO.getPostalCode(), addressDTO.getProvinceState(), addressDTO.getCountry());
+        accountHolder.setMailingAddress(address);
+        return accountHolderRepository.save(accountHolder);
+    }
+
 }

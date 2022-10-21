@@ -9,14 +9,22 @@ import com.Ironhack.FinalProject.embeddables.Address;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.repositories.*;
+import com.Ironhack.FinalProject.roles.Role;
+import com.Ironhack.FinalProject.roles.RolesEnum;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import com.Ironhack.FinalProject.usermodels.Admin;
+import com.Ironhack.FinalProject.usermodels.ThirdParty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
@@ -72,14 +80,17 @@ public class AdminControllerTests {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         address1 = new Address("Passeig de la Mare de Deu del Coll 200, 2nda 3ra", "Barcelona", "08032", "Barcelona", "Spain");
         address2 = new Address("Carrer de Cristiano Ronaldo", "Sivenga", "08032", "Fumada", "Jardin");
-        accountHolder1 = new AccountHolder("Sergi", "sergi@gmail.com", 644745537l, "1234", "serkelet", LocalDate.of(1985, 12, 5), address1);
-        accountHolder2 = new AccountHolder("Oscar", "oscar@gmail.com", 777555111l, "manzana", "sihombre", LocalDate.of(2000, 12, 5), address2);
+        accountHolder1 = new AccountHolder("Sergi", "1234", "sergi@gmail.com", 644745537l, "Sergi Cortes", LocalDate.of(1985, 12, 5), address1);
+        accountHolder2 = new AccountHolder("Oscar", "4321", "oscar@gmail.com", 444555333l, "Oscar Curto", LocalDate.of(2000, 12, 5), address2);
+        accountHolder1.addRole(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder1));
+        accountHolder2.addRole(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder2));
         savings1 = new Savings(new Money(BigDecimal.valueOf(1500)), accountHolder1, 1234);
         checkingAccount1 = new CheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder1, 1234);
         studentCheckingAccount1 = new StudentCheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
         creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
         admin1 = new Admin("Bengisu", "bengi", "99eni");
         adminRepository.save(admin1);
+        admin1.addRole(new Role(RolesEnum.ADMIN, admin1));
         accountHolderRepository.save(accountHolder1);
         accountHolderRepository.save(accountHolder2);
         savingsRepository.save(savings1);
@@ -120,9 +131,8 @@ public class AdminControllerTests {
     @Test
     @DisplayName("Testing creating user and account")
     void post_CreateUserAndAccount_isOk() throws Exception{
-        Address newAddress = new Address("Carrer Concili de Trento", "Barcelona", "08018", "Barcelona", "Spain");
-        AccountHolderDTO accountHolderDTO = new AccountHolderDTO("Raquel", "raquel@gmail.com", 555666777l, LocalDate.of(1990, 9, 11), newAddress, "checkingAccount", BigDecimal.valueOf(5000));
-        String body = objectMapper.writeValueAsString(accountHolderDTO);
+        AccountHolderCreationDTO accountHolderCreationDTO = new AccountHolderCreationDTO("Carrer Concili de Trento", "Barcelona", "08018", "Barcelona", "Spain", "rakmon","Raquel Cortes", "raquel@gmail.com", 555666777l,  LocalDate.of(1990, 9, 11),  "checkingAccount", BigDecimal.valueOf(5000));
+        String body = objectMapper.writeValueAsString(accountHolderCreationDTO);
         MvcResult mvcResult = mockMvc.perform(post("/create_user_account").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("5000"));
     }
@@ -137,7 +147,7 @@ public class AdminControllerTests {
     @Test
     @DisplayName("Testing delete account")
     void delete_DeleteAccount_isOk() throws Exception{
-        MvcResult mvcResult = mockMvc.perform(delete("/delete_account/3")).andExpect(status().isAccepted()).andReturn();
+        MvcResult mvcResult = mockMvc.perform(delete("/delete_account/"+studentCheckingAccount1.getAccountNumber())).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().isEmpty());
     }
     @Test
@@ -160,13 +170,9 @@ public class AdminControllerTests {
         MvcResult mvcResult = mockMvc.perform(patch("/assign_secondary_owner").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("Sergi"));
     }
-   /* @Test
-    @DisplayName("Testing ")
-    void post_CreateThirdParty_isOk{
 
-    }
-    */
     @Test
+    @WithMockUser("bengi")
     @DisplayName("Testing create Admin")
     void post_CreateAdmin_isOk() throws Exception {
         Admin admin = new Admin("sergi", "serk", "1234");
@@ -175,4 +181,21 @@ public class AdminControllerTests {
         assertTrue(mvcResult.getResponse().getContentAsString().contains("serk"));
     }
 
+    @Test
+    @DisplayName("testing create address")
+    void post_CreateAddress_isOk() throws Exception{
+        AddressDTO addressDTO = new AddressDTO(accountHolder1.getId(), "Carrer Rosselló", "Barcelona", "08098", "Barcelona", "Spain");
+        String body = objectMapper.writeValueAsString(addressDTO);
+        MvcResult mvcResult = mockMvc.perform(post("/create_address").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("Rossell"));
+    }
+
+    @Test
+    @DisplayName("testing create address")
+    void post_CreateMailingAddress_isOk() throws Exception{
+        AddressDTO addressDTO = new AddressDTO(accountHolder1.getId(), "Carrer Rosselló", "Barcelona", "08098", "Barcelona", "Spain");
+        String body = objectMapper.writeValueAsString(addressDTO);
+        MvcResult mvcResult = mockMvc.perform(post("/create_mailing_address").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("Rossell"));
+    }
 }

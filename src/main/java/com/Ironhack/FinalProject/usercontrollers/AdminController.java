@@ -13,6 +13,7 @@ import com.Ironhack.FinalProject.userservices.interfaces.AccountHolderServiceInt
 import com.Ironhack.FinalProject.userservices.interfaces.AdminServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public class AdminController implements AdminControllerInterface {
 
     @PostMapping("/create_user_account")
     @ResponseStatus(HttpStatus.CREATED)
-    public Account createNewUserAndAccount(@RequestBody AccountHolderDTO accountHolderDTO){
-        return adminServiceInterface.createNewUserAndAccount(accountHolderDTO);
+    public Account createNewUserAndAccount(@RequestBody AccountHolderCreationDTO accountHolderCreationDTO){
+        return adminServiceInterface.createNewUserAndAccount(accountHolderCreationDTO);
     }
 
     @PostMapping("/create_account")
@@ -78,8 +79,8 @@ public class AdminController implements AdminControllerInterface {
     }
     @PostMapping("/create_user")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountHolder createUserAccount(@RequestBody AccountHolder accountHolder){
-        return accountHolderServiceInterface.createUserAccount(accountHolder);
+    public AccountHolder createUserAccount(@RequestBody AccountHolderCreationDTO accountHolderCreationDTO){
+        return accountHolderServiceInterface.createUserAccount(accountHolderCreationDTO);
     }
     @PostMapping("/create_admin")
     @ResponseStatus(HttpStatus.CREATED)
@@ -91,5 +92,17 @@ public class AdminController implements AdminControllerInterface {
     @ResponseStatus(HttpStatus.CREATED)
     public ThirdParty createThirdParty(@RequestBody ThirdParty thirdParty){
         return adminServiceInterface.createThirdParty(thirdParty);
+    }
+@PostMapping("/create_address")
+@ResponseStatus(HttpStatus.CREATED)
+   public AccountHolder createAddress(@RequestBody AddressDTO addressDTO){
+        return adminServiceInterface.createAddress(addressDTO);
+}
+
+
+    @PostMapping("/create_mailing_address")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountHolder createMailingAddress(@RequestBody AddressDTO addressDTO){
+        return adminServiceInterface.createMailingAddress(addressDTO);
     }
 }

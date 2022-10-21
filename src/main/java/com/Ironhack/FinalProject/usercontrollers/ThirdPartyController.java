@@ -16,12 +16,12 @@ public class ThirdPartyController implements ThirdPartyControllerInterface {
     @PatchMapping("/third_party/add")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Account thirdPartyAddBalance(@RequestBody ThirdPartyDTO thirdPartyDTO, @RequestHeader String hashedKey){
-      return thirdPartyServiceInterface.thirdPartyAddBalance(thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId());
+      return thirdPartyServiceInterface.thirdPartyAddBalance(thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId(), thirdPartyDTO.getThirdPartyId(), hashedKey);
     }
     @PatchMapping("/third_party/decrease")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public Account thirdPartySubtractBalance(@RequestBody ThirdPartyDTO thirdPartyDTO, @RequestHeader String hashedKey){
-        return thirdPartyServiceInterface.thirdPartySubtractBalance(thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId());
+        return thirdPartyServiceInterface.thirdPartySubtractBalance(thirdPartyDTO.getAmount(), thirdPartyDTO.getAccountId(), thirdPartyDTO.getThirdPartyId(), hashedKey);
     }
 
 }

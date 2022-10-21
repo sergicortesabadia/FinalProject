@@ -1,19 +1,21 @@
 package com.Ironhack.FinalProject.usercontrollers.interfaces;
 
-import com.Ironhack.FinalProject.DTOs.AccountDTO;
-import com.Ironhack.FinalProject.DTOs.SecondaryOwnerDTO;
-import com.Ironhack.FinalProject.DTOs.TransferDTO;
+import com.Ironhack.FinalProject.DTOs.*;
 import com.Ironhack.FinalProject.accountmodels.Account;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
+import com.Ironhack.FinalProject.usermodels.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 public interface AccountHolderControllerInterface {
-    BigDecimal transferMoneyByAccountType(@RequestBody TransferDTO transferDTO);
-    List<Account> showAllAccountsByAccountHolder(Long accountHolderId);
-    Money getBalance(SecondaryOwnerDTO secondaryOwnerDTO);
-    AccountHolder createUserAccount(AccountHolder accountHolder);
+    BigDecimal transferMoneyByAccountType(UserDetails userDetails, TransferDTO transferDTO);
+    List<Account> showAllAccountsByAccountHolder(UserDetails userDetails);
+    Money getBalance(UserDetails userDetails, Long accountNumber);
+    AccountHolder createUserAccount(AccountHolderCreationDTO accountHolderCreationDTO);
+    AccountHolder createAddressAsUser(UserDetails userDetails, AddressDTO addressDTO);
+    AccountHolder createMailingAddressAsUser(UserDetails userDetails, AddressDTO addressDTO);
 }

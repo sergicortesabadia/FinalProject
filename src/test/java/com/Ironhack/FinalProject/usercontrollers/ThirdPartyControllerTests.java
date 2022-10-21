@@ -75,14 +75,14 @@ public class ThirdPartyControllerTests {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         address1 = new Address("Passeig de la Mare de Deu del Coll 200, 2nda 3ra", "Barcelona", "08032", "Barcelona", "Spain");
         address2 = new Address("Carrer de Cristiano Ronaldo", "Sivenga", "08032", "Fumada", "Jardin");
-        accountHolder1 = new AccountHolder("Sergi", "sergi@gmail.com", 644745537l, "1234", "serkelet", LocalDate.of(1985, 12, 5), address1);
-        accountHolder2 = new AccountHolder("Oscar", "oscar@gmail.com", 777555111l, "manzana", "sihombre", LocalDate.of(2000, 12, 5), address2);
+        accountHolder1 = new AccountHolder("Sergi", "1234", "sergi@gmail.com", 644745537l, "Sergi Cortes", LocalDate.of(1985, 12, 5), address1);
+        accountHolder2 = new AccountHolder("Oscar", "4321", "oscar@gmail.com", 444555333l, "Oscar Curto", LocalDate.of(2000, 12, 5), address2);
         savings1 = new Savings(new Money(BigDecimal.valueOf(1500)), accountHolder1, 1234);
         checkingAccount1 = new CheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder1, 1234);
         studentCheckingAccount1 = new StudentCheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
         creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
         admin1 = new Admin("Bengisu", "bengi", "99eni");
-        thirdParty1 = new ThirdParty("CaixaBank", "1");
+        thirdParty1 = new ThirdParty("CaixaBank", "3442", "1");
         adminRepository.save(admin1);
         accountHolderRepository.save(accountHolder1);
         accountHolderRepository.save(accountHolder2);
@@ -99,7 +99,7 @@ public class ThirdPartyControllerTests {
     @Test
     @DisplayName("Testing whether money is added")
     void patch_ThirdPartyAddBalance_isOk() throws Exception{
-        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO(BigDecimal.valueOf(2500), savings1.getAccountNumber());
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO(BigDecimal.valueOf(2500), savings1.getAccountNumber(), thirdParty1.getId());
         String body = objectMapper.writeValueAsString(thirdPartyDTO);
         MvcResult mvcResult = mockMvc.perform(patch("/third_party/add").header("hashedKey", thirdParty1.getHashedKey()).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("4000"));
@@ -107,7 +107,7 @@ public class ThirdPartyControllerTests {
     @Test
     @DisplayName("Testing whether money is subtracted")
     void patch_ThirdPartySubtractBalance_isOk() throws Exception{
-        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO(BigDecimal.valueOf(500), savings1.getAccountNumber());
+        ThirdPartyDTO thirdPartyDTO = new ThirdPartyDTO(BigDecimal.valueOf(500), savings1.getAccountNumber(), thirdParty1.getId());
         String body = objectMapper.writeValueAsString(thirdPartyDTO);
         MvcResult mvcResult = mockMvc.perform(patch("/third_party/decrease").header("hashedKey", thirdParty1.getHashedKey()).content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("1000"));

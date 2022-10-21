@@ -5,7 +5,6 @@ import com.Ironhack.FinalProject.embeddables.Address;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,12 +12,9 @@ import java.util.List;
 public class AccountHolder extends User{
 private String mail;
 private Long phone;
-//@Column(nullable = false)
+    //@Column(unique = true)
 //@NotNull
-private String password;
-//@Column(unique = true)
-//@NotNull
-private String userName;
+private String name;
 private LocalDate birthDate;
 @Embedded
 private Address primaryAddress;
@@ -44,41 +40,38 @@ private List <Account> secondaryAccountHolderList;
     public AccountHolder() {
     }
 
-    public AccountHolder(String name, String mail, Long phone, LocalDate birthDate, Address primaryAddress) {
-        super(name);
+    public AccountHolder(String username, String mail, Long phone, String name, LocalDate birthDate, Address primaryAddress) {
+        super(username);
         setMail(mail);
         setPhone(phone);
+        setName(name);
+        setBirthDate(birthDate);
+        setPrimaryAddress(primaryAddress);
+    }
+    public AccountHolder(String username, String password, String mail, Long phone, String name, LocalDate birthDate, Address primaryAddress) {
+        super(username, password);
+        setMail(mail);
+        setPhone(phone);
+        setName(name);
         setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
     }
 
-    public AccountHolder(String name, String mail, Long phone, String password, String userName, LocalDate birthDate, Address primaryAddress, Address mailingAddress) {
-        super(name);
+    public AccountHolder(String username, String password, String mail, Long phone, String name, LocalDate birthDate, Address primaryAddress, Address mailingAddress) {
+        super(username, password);
         setMail(mail);
         setPhone(phone);
-        setPassword(password);
-        setUserName(userName);
+        setName(name);
         setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
         setMailingAddress(mailingAddress);
     }
 
-    public AccountHolder(String name, String mail, Long phone, String password, String userName, LocalDate birthDate, Address primaryAddress) {
-        super(name);
+    public AccountHolder(String username, String password, String mail, Long phone, String name, LocalDate birthDate, Address primaryAddress, Address mailingAddress, List<Account> primaryAccountHolderList, List<Account> secondaryAccountHolderList) {
+        super(username, password);
         setMail(mail);
         setPhone(phone);
-        setPassword(password);
-        setUserName(userName);
-        setBirthDate(birthDate);
-        setPrimaryAddress(primaryAddress);
-    }
-
-    public AccountHolder(String name, String mail, Long phone, String password, String userName, LocalDate birthDate, Address primaryAddress, Address mailingAddress, List<Account> primaryAccountHolderList, List<Account> secondaryAccountHolderList) {
-        super(name);
-        setMail(mail);
-        setPhone(phone);
-        setPassword(password);
-        setUserName(userName);
+        setName(name);
         setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
         setMailingAddress(mailingAddress);
@@ -86,12 +79,11 @@ private List <Account> secondaryAccountHolderList;
         setSecondaryAccountHolderList(secondaryAccountHolderList);
     }
 
-    public AccountHolder(String name, String mail, Long phone, String password, String userName, LocalDate birthDate, Address primaryAddress, List<Account> primaryAccountHolderList, List<Account> secondaryAccountHolderList) {
-        super(name);
+    public AccountHolder(String username, String password, String mail, Long phone, String name, LocalDate birthDate, Address primaryAddress, List<Account> primaryAccountHolderList, List<Account> secondaryAccountHolderList) {
+        super(username, password);
         setMail(mail);
         setPhone(phone);
-        setPassword(password);
-        setUserName(userName);
+        setName(name);
         setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
         setPrimaryAccountHolderList(primaryAccountHolderList);
@@ -122,20 +114,12 @@ private List <Account> secondaryAccountHolderList;
         this.phone = phone;
     }
 
-    public String getPassword() {
-        return password;
+    public String getName() {
+        return name;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Address getPrimaryAddress() {

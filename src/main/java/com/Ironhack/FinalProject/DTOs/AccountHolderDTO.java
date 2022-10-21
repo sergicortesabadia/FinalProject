@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 public class AccountHolderDTO {
         private Long id;
+        private String username;
         private String name;
         private String mail;
         private Long phone;
@@ -26,25 +27,35 @@ public class AccountHolderDTO {
         setInitialBalance(initialBalance);
     }
 
-    public AccountHolderDTO(String name, String mail, Long phone, LocalDate birthDate, Address primaryAddress, String accountType, BigDecimal initialBalance) {
-        setName(name);
+    public AccountHolderDTO(String username, String mail, Long phone, String name, LocalDate birthDate, Address primaryAddress, String accountType, BigDecimal initialBalance) {
+        setUsername(username);
         setMail(mail);
         setPhone(phone);
+        setName(name);
         setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
         setAccountType(accountType);
         setInitialBalance(initialBalance);
     }
 
-    public AccountHolderDTO(String name, String mail, Long phone, LocalDate birthDate, Address primaryAddress, Address mailingAddress, String accountType, BigDecimal initialBalance) {
-        setName(name);
+    public AccountHolderDTO(String username, String mail, Long phone, String name, LocalDate birthDate, Address primaryAddress, Address mailingAddress, String accountType, BigDecimal initialBalance) {
+        setName(username);
         setMail(mail);
         setPhone(phone);
+        setName(name);
         setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
         setMailingAddress(mailingAddress);
         setAccountType(accountType);
         setInitialBalance(initialBalance);
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getName() {

@@ -5,13 +5,15 @@ import java.math.BigDecimal;
 public class ThirdPartyDTO {
     private BigDecimal amount;
     private Long accountId;
+    private Long thirdPartyId;
 
     public ThirdPartyDTO() {
     }
 
-    public ThirdPartyDTO(BigDecimal amount, Long accountId) {
+    public ThirdPartyDTO(BigDecimal amount, Long accountId, Long thirdPartyId) {
         setAmount(amount);
         setAccountId(accountId);
+        setThirdPartyId(thirdPartyId);
     }
 
     public BigDecimal getAmount() {
@@ -30,4 +32,11 @@ public class ThirdPartyDTO {
         this.accountId = accountId;
     }
 
+    public Long getThirdPartyId() {
+        return thirdPartyId;
+    }
+
+    public void setThirdPartyId(Long thirdPartyId) {
+        this.thirdPartyId = thirdPartyId;
+    }
 }

@@ -1,9 +1,6 @@
 package com.Ironhack.FinalProject.userservices.interfaces;
 
-import com.Ironhack.FinalProject.DTOs.AccountDTO;
-import com.Ironhack.FinalProject.DTOs.AccountHolderDTO;
-import com.Ironhack.FinalProject.DTOs.CreateAccountDTO;
-import com.Ironhack.FinalProject.DTOs.ModifyBalanceDTO;
+import com.Ironhack.FinalProject.DTOs.*;
 import com.Ironhack.FinalProject.accountmodels.Account;
 import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
@@ -18,7 +15,7 @@ public interface AdminServiceInterface {
     Account addBalance(ModifyBalanceDTO modifyBalanceDTO);
     Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO);
     Account changeAccountStatus(Long accountNumber, AccountStatus accountStatus);
-    Account createNewUserAndAccount(AccountHolderDTO accountHolderDTO);
+    Account createNewUserAndAccount(AccountHolderCreationDTO accountHolderCreationDTO);
     void deleteAccount(Long accountNumber);
     List<Account> getAllAccounts();
     List<User> getAllUsers();
@@ -26,4 +23,6 @@ public interface AdminServiceInterface {
     Account assignSecondaryOwner (Long accountNumber, Long accountHolderId);
     Admin createAdmin (Admin admin);
     ThirdParty createThirdParty(ThirdParty thirdParty);
+    AccountHolder createAddress(AddressDTO addressDTO);
+    AccountHolder createMailingAddress(AddressDTO addressDTO);
 }
