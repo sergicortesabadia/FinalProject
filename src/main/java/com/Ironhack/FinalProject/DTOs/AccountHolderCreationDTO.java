@@ -1,22 +1,33 @@
 package com.Ironhack.FinalProject.DTOs;
 
-import com.Ironhack.FinalProject.embeddables.Address;
-
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class AccountHolderCreationDTO {
+    @NotNull
     private String street;
+    @NotNull
     private String city;
+
     private String postalCode;
+
     private String provinceState;
+    @NotNull
     private String country;
+    @NotNull
     private String username;
+    @NotNull
     private String name;
+    @NotNull
     private String mail;
+    @NotNull
     private Long phone;
+    @NotNull
     private LocalDate birthDate;
+    @NotNull
     private String accountType;
+    @NotNull
     private BigDecimal initialBalance;
 
     public AccountHolderCreationDTO() {

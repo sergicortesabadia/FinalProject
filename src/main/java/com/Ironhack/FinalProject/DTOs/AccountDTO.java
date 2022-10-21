@@ -4,12 +4,14 @@ import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class AccountDTO {
-
+@NotNull
     private Long accountNumber;
+@NotNull
     private Money balance;
     private String primaryOwner;
     private String secondaryOwner; //optional
