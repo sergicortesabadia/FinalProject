@@ -1,6 +1,6 @@
 package com.Ironhack.FinalProject.accountmodels;
 
-import com.Ironhack.FinalProject.enums.AccountStatus;
+
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import org.springframework.http.HttpStatus;
@@ -8,7 +8,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.validation.constraints.DecimalMax;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

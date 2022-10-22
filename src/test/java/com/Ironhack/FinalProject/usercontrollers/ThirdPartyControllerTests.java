@@ -7,8 +7,9 @@ import com.Ironhack.FinalProject.accountmodels.Savings;
 import com.Ironhack.FinalProject.accountmodels.StudentCheckingAccount;
 import com.Ironhack.FinalProject.embeddables.Address;
 import com.Ironhack.FinalProject.embeddables.Money;
-import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.repositories.*;
+import com.Ironhack.FinalProject.roles.Role;
+import com.Ironhack.FinalProject.roles.RolesEnum;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import com.Ironhack.FinalProject.usermodels.Admin;
 import com.Ironhack.FinalProject.usermodels.ThirdParty;
@@ -20,7 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.http.MediaType;
 
@@ -77,12 +77,16 @@ public class ThirdPartyControllerTests {
         address2 = new Address("Carrer de Cristiano Ronaldo", "Sivenga", "08032", "Fumada", "Jardin");
         accountHolder1 = new AccountHolder("Sergi", "1234", "sergi@gmail.com", 644745537l, "Sergi Cortes", LocalDate.of(1985, 12, 5), address1);
         accountHolder2 = new AccountHolder("Oscar", "4321", "oscar@gmail.com", 444555333l, "Oscar Curto", LocalDate.of(2000, 12, 5), address2);
+        accountHolder1.addRole(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder1));
+        accountHolder2.addRole(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder2));
         savings1 = new Savings(new Money(BigDecimal.valueOf(1500)), accountHolder1, 1234);
         checkingAccount1 = new CheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder1, 1234);
         studentCheckingAccount1 = new StudentCheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
         creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
-        admin1 = new Admin("Bengisu", "bengi", "99eni");
+        admin1 = new Admin("bengi", "99eni");
+        admin1.addRole(new Role(RolesEnum.ADMIN, admin1));
         thirdParty1 = new ThirdParty("CaixaBank", "3442", "1");
+        thirdParty1.addRole(new Role(RolesEnum.THIRD_PARTY, thirdParty1));
         adminRepository.save(admin1);
         accountHolderRepository.save(accountHolder1);
         accountHolderRepository.save(accountHolder2);
@@ -90,6 +94,7 @@ public class ThirdPartyControllerTests {
         checkingAccountRepository.save(checkingAccount1);
         studentCheckingAccountRepository.save(studentCheckingAccount1);
         creditCardRepository.save(creditCard1);
+        thirdPartyRepository.save(thirdParty1);
     }
 
     @AfterEach

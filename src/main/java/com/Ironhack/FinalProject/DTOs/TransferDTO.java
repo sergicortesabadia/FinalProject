@@ -1,12 +1,16 @@
 package com.Ironhack.FinalProject.DTOs;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class TransferDTO {
-    private Long senderId;
+    @NotNull
     private Long senderAccountNumber;
+    @NotNull
     private BigDecimal transfer;
+    @NotNull
     private Long receiverAccountNumber;
+    @NotNull
     private Long receiverId;
 
     public TransferDTO() {
@@ -41,14 +45,6 @@ public class TransferDTO {
 
     public void setReceiverAccountNumber(Long receiverAccountNumber) {
         this.receiverAccountNumber = receiverAccountNumber;
-    }
-
-    public Long getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(Long senderId) {
-        this.senderId = senderId;
     }
 
     public Long getReceiverId() {

@@ -1,6 +1,5 @@
 package com.Ironhack.FinalProject.accountmodels;
 
-import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import org.springframework.http.HttpStatus;
@@ -8,16 +7,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 @Entity
 public class Savings extends Account{
     @Embedded
- //   @DecimalMin("100")
     private Money minimumBalance = new Money(java.math.BigDecimal.valueOf(1000));
-  //  @DecimalMax("0.5")
     private BigDecimal interestRate = new BigDecimal(0.0025);
     private LocalDate lastInterestDay = LocalDate.now();
 

@@ -2,18 +2,17 @@ package com.Ironhack.FinalProject.usercontrollers;
 
 import com.Ironhack.FinalProject.DTOs.*;
 import com.Ironhack.FinalProject.accountmodels.Account;
-import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.usercontrollers.interfaces.AdminControllerInterface;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import com.Ironhack.FinalProject.usermodels.Admin;
 import com.Ironhack.FinalProject.usermodels.ThirdParty;
 import com.Ironhack.FinalProject.usermodels.User;
-import com.Ironhack.FinalProject.userservices.AdminService;
 import com.Ironhack.FinalProject.userservices.interfaces.AccountHolderServiceInterface;
 import com.Ironhack.FinalProject.userservices.interfaces.AdminServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,6 +23,7 @@ public class AdminController implements AdminControllerInterface {
     AdminServiceInterface adminServiceInterface;
     @Autowired
     AccountHolderServiceInterface accountHolderServiceInterface;
+
 
     @PatchMapping("/add_balance")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -93,11 +93,11 @@ public class AdminController implements AdminControllerInterface {
     public ThirdParty createThirdParty(@RequestBody ThirdParty thirdParty){
         return adminServiceInterface.createThirdParty(thirdParty);
     }
-@PostMapping("/create_address")
-@ResponseStatus(HttpStatus.CREATED)
-   public AccountHolder createAddress(@RequestBody AddressDTO addressDTO){
+    @PostMapping("/create_address")
+    @ResponseStatus(HttpStatus.CREATED)
+    public AccountHolder createAddress(@RequestBody AddressDTO addressDTO){
         return adminServiceInterface.createAddress(addressDTO);
-}
+    }
 
 
     @PostMapping("/create_mailing_address")
@@ -105,4 +105,10 @@ public class AdminController implements AdminControllerInterface {
     public AccountHolder createMailingAddress(@RequestBody AddressDTO addressDTO){
         return adminServiceInterface.createMailingAddress(addressDTO);
     }
+    @PatchMapping("/change_password")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public User changePasswordAsAdmin(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ChangePassWordDTO changePassWordDTO){
+        return accountHolderServiceInterface.changePassword(userDetails.getUsername(), changePassWordDTO.getOldPassword(), changePassWordDTO.getNewPassword(), changePassWordDTO.getRepeatPassword());
+    }
+
 }

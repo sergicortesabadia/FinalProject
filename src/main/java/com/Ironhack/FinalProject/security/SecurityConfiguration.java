@@ -1,18 +1,10 @@
 package com.Ironhack.FinalProject.security;
 
-import com.Ironhack.FinalProject.DTOs.*;
-import com.Ironhack.FinalProject.accountmodels.Account;
-import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.securityservice.CustomUserDetailsService;
-import com.Ironhack.FinalProject.usermodels.AccountHolder;
-import com.Ironhack.FinalProject.usermodels.Admin;
-import com.Ironhack.FinalProject.usermodels.ThirdParty;
-import com.Ironhack.FinalProject.usermodels.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,10 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.List;
 
 @Configuration
 @EnableGlobalMethodSecurity(securedEnabled = true)
@@ -49,8 +38,12 @@ public class SecurityConfiguration {
 
         httpSecurity.authorizeRequests()
                 .mvcMatchers(HttpMethod.PATCH, "/transfer").hasAnyRole("ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.PATCH, "/new_password").hasAnyRole("ACCOUNT_HOLDER")
                 .mvcMatchers(HttpMethod.GET,"/show_account/{id}").hasRole("ACCOUNT_HOLDER")
                 .mvcMatchers(HttpMethod.GET,"/show_accounts").hasRole("ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.POST,"/new_address").hasRole("ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.POST,"/new_mailing_address").hasRole("ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.POST,"/new_password").hasRole("ACCOUNT_HOLDER")
                 .mvcMatchers(HttpMethod.PATCH,"/add_balance").hasRole("ADMIN")
                 .mvcMatchers(HttpMethod.PATCH,"/decrease_balance").hasRole("ADMIN")
                 .mvcMatchers(HttpMethod.POST,"/create_user_account").hasRole("ADMIN")
@@ -62,6 +55,9 @@ public class SecurityConfiguration {
                 .mvcMatchers(HttpMethod.PATCH,"/assign_secondary_owner").hasRole("ADMIN")
                 .mvcMatchers(HttpMethod.POST,"/create_admin").hasRole("ADMIN")
                 .mvcMatchers(HttpMethod.POST,"/create_third_party").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.POST,"/create_address").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.POST,"/create_mailing_address").hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.PATCH,"/change_password").hasRole("ADMIN")
                 .anyRequest().permitAll();
 
         httpSecurity.csrf().disable();
@@ -71,4 +67,4 @@ public class SecurityConfiguration {
     }
 
 }
-//    @PostMapping("/user/create_user")
+

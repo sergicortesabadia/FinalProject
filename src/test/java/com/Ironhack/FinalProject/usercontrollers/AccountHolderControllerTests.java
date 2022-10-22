@@ -7,24 +7,20 @@ import com.Ironhack.FinalProject.accountmodels.Savings;
 import com.Ironhack.FinalProject.accountmodels.StudentCheckingAccount;
 import com.Ironhack.FinalProject.embeddables.Address;
 import com.Ironhack.FinalProject.embeddables.Money;
-import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.repositories.*;
 import com.Ironhack.FinalProject.roles.Role;
 import com.Ironhack.FinalProject.roles.RolesEnum;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import com.Ironhack.FinalProject.usermodels.Admin;
-import com.Ironhack.FinalProject.usermodels.ThirdParty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.http.MediaType;
 
@@ -83,7 +79,7 @@ public class AccountHolderControllerTests {
         checkingAccount1 = new CheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder1, 1234);
         studentCheckingAccount1 = new StudentCheckingAccount(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
         creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(3000)), accountHolder2, 1234);
-        admin1 = new Admin("Bengisu", "bengi", "99eni");
+        admin1 = new Admin( "bengi", "99eni");
         admin1.addRole(new Role(RolesEnum.ADMIN, admin1));
         adminRepository.save(admin1);
         accountHolderRepository.save(accountHolder1);
@@ -152,5 +148,14 @@ public class AccountHolderControllerTests {
         String body = objectMapper.writeValueAsString(addressDTO);
         MvcResult mvcResult = mockMvc.perform(post("/new_mailing_address").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("Rossell"));
+    }
+    @Test
+    @WithMockUser("Sergi")
+    @DisplayName("testing change password")
+    void patch_changePassword_isOk() throws Exception{
+        ChangePassWordDTO changePassWordDTO = new ChangePassWordDTO( "1234", "0512", "0512");
+        String body = objectMapper.writeValueAsString(changePassWordDTO);
+        MvcResult mvcResult = mockMvc.perform(patch("/new_password").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isAccepted()).andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("0512"));
     }
 }

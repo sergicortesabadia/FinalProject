@@ -25,7 +25,7 @@ public abstract class Account {
     private AccountHolder primaryOwner;
     @ManyToOne
     @JoinColumn(name = "secondary_owner")
-    private AccountHolder secondaryOwner; //optional
+    private AccountHolder secondaryOwner;
     private int secretKey;
     @Embedded
     @AttributeOverrides({

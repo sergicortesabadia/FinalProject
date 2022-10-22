@@ -7,7 +7,6 @@ import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.repositories.AccountRepository;
 import com.Ironhack.FinalProject.repositories.CreditCardRepository;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
-import com.Ironhack.FinalProject.userservices.interfaces.AdminServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +27,6 @@ public class CreditCardService implements CreditCardServiceInterface {
         creditCard.setAccountStatus(AccountStatus.ACTIVE);
         creditCard.setBalance(new Money(initialBalance));
         creditCard.setLastInterestDay(LocalDate.now());
-//    creditCardRepository.save(creditCard);
         return accountRepository.save(creditCard);
     }
 

@@ -18,4 +18,6 @@ public interface AccountHolderControllerInterface {
     AccountHolder createUserAccount(AccountHolderCreationDTO accountHolderCreationDTO);
     AccountHolder createAddressAsUser(UserDetails userDetails, AddressDTO addressDTO);
     AccountHolder createMailingAddressAsUser(UserDetails userDetails, AddressDTO addressDTO);
+    User changePassword(UserDetails userDetails, ChangePassWordDTO changePassWordDTO);
+
 }

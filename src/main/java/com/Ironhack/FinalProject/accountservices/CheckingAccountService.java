@@ -1,14 +1,11 @@
 package com.Ironhack.FinalProject.accountservices;
 
 import com.Ironhack.FinalProject.accountmodels.CheckingAccount;
-import com.Ironhack.FinalProject.accountmodels.CreditCard;
-import com.Ironhack.FinalProject.accountmodels.StudentCheckingAccount;
 import com.Ironhack.FinalProject.accountservices.interfaces.CheckingAccountServiceInterface;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.repositories.AccountRepository;
 import com.Ironhack.FinalProject.repositories.CheckingAccountRepository;
-import com.Ironhack.FinalProject.repositories.StudentCheckingAccountRepository;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

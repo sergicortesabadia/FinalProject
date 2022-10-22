@@ -5,7 +5,7 @@ import com.Ironhack.FinalProject.accountmodels.Account;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.usercontrollers.interfaces.AccountHolderControllerInterface;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
-import com.Ironhack.FinalProject.userservices.AccountHolderService;
+import com.Ironhack.FinalProject.usermodels.User;
 import com.Ironhack.FinalProject.userservices.interfaces.AccountHolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +20,7 @@ import java.util.List;
 public class AccountHolderController implements AccountHolderControllerInterface {
     @Autowired
     AccountHolderServiceInterface accountHolderServiceInterface;
+
 
     @PatchMapping("/transfer")
     @ResponseStatus(HttpStatus.ACCEPTED)
@@ -44,12 +45,16 @@ public class AccountHolderController implements AccountHolderControllerInterface
     @PostMapping("/new_mailing_address")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountHolder createMailingAddressAsUser(@AuthenticationPrincipal UserDetails userDetails, @RequestBody AddressDTO addressDTO){
-        return accountHolderServiceInterface.createAddressAsUser(userDetails.getUsername(), addressDTO);
+        return accountHolderServiceInterface.createMailingAddressAsUser(userDetails.getUsername(), addressDTO);
     }
     @PostMapping("/user/create_user")
     @ResponseStatus(HttpStatus.CREATED)
     public AccountHolder createUserAccount(@RequestBody AccountHolderCreationDTO accountHolderCreationDTO){
         return accountHolderServiceInterface.createUserAccount(accountHolderCreationDTO);
     }
-
+    @PatchMapping("/new_password")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public User changePassword(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ChangePassWordDTO changePassWordDTO){
+        return accountHolderServiceInterface.changePassword(userDetails.getUsername(), changePassWordDTO.getOldPassword(), changePassWordDTO.getNewPassword(), changePassWordDTO.getRepeatPassword());
+    }
 }

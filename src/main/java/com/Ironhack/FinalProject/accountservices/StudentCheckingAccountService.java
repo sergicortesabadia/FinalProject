@@ -11,14 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Service
 public class StudentCheckingAccountService implements StudentCheckingAccountServiceInterface {
     @Autowired
     AccountRepository accountRepository;
-    @Autowired
-    StudentCheckingAccountRepository studentCheckingAccountRepository;
 
 public StudentCheckingAccount createStudentCheckingAccount (AccountHolder accountHolder, BigDecimal initialBalance) {
     StudentCheckingAccount studentCheckingAccount = new StudentCheckingAccount();
@@ -26,7 +23,6 @@ public StudentCheckingAccount createStudentCheckingAccount (AccountHolder accoun
     studentCheckingAccount.setAccountStatus(AccountStatus.ACTIVE);
     studentCheckingAccount.setSecretKey(0000);
     studentCheckingAccount.setBalance(new Money(initialBalance));
- //   studentCheckingAccountRepository.save(studentCheckingAccount);
     return accountRepository.save(studentCheckingAccount);
 }
 }

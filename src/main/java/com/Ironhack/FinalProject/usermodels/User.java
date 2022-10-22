@@ -1,7 +1,6 @@
 package com.Ironhack.FinalProject.usermodels;
 
 import com.Ironhack.FinalProject.roles.Role;
-import com.Ironhack.FinalProject.roles.RolesEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

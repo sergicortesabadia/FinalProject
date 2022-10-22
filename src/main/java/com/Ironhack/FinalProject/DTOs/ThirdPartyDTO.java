@@ -1,10 +1,14 @@
 package com.Ironhack.FinalProject.DTOs;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ThirdPartyDTO {
+    @NotNull
     private BigDecimal amount;
+    @NotNull
     private Long accountId;
+    @NotNull
     private Long thirdPartyId;
 
     public ThirdPartyDTO() {

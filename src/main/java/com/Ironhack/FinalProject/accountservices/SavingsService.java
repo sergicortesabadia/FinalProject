@@ -31,7 +31,6 @@ public class SavingsService implements SavingsServiceInterface {
         savings.setSecretKey(0000);
         savings.setAccountStatus(AccountStatus.ACTIVE);
         savings.setBalance(new Money(initialBalance));
-    //    savingsRepository.save(savings);
         return accountRepository.save(savings);
     }
     public Money addInterestRateOnSavings(Long accountNumber) {

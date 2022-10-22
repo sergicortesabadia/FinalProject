@@ -1,11 +1,16 @@
 package com.Ironhack.FinalProject.DTOs;
 
+import javax.validation.constraints.NotNull;
+
 public class AddressDTO {
     private Long accountHolderId;
+    @NotNull
     private String street;
+    @NotNull
     private String city;
     private String postalCode;
     private String provinceState;
+    @NotNull
     private String country;
 
     public AddressDTO() {

@@ -15,6 +15,7 @@ import com.Ironhack.FinalProject.roles.RolesEnum;
 import com.Ironhack.FinalProject.transactions.Transaction;
 import com.Ironhack.FinalProject.transactions.transactionservice.transactionserviceinterface.TransactionServiceInterface;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
+import com.Ironhack.FinalProject.usermodels.User;
 import com.Ironhack.FinalProject.userservices.interfaces.AccountHolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -172,5 +173,11 @@ public class AccountHolderService implements AccountHolderServiceInterface {
         accountHolder.setMailingAddress(address);
         return accountHolderRepository.save(accountHolder);
     }
-
+    public User changePassword(String username, String oldPassword, String newPassword, String repeatPassword){
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if(!user.getPassword().equals(oldPassword)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        if(!newPassword.equals(repeatPassword)) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The repeated password is different from the first entry");
+        user.setPassword(newPassword);
+        return userRepository.save(user);
+    }
 }

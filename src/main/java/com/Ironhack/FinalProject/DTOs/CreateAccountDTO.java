@@ -1,11 +1,14 @@
 package com.Ironhack.FinalProject.DTOs;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class CreateAccountDTO {
-
+    @NotNull
     private Long id;
+    @NotNull
     private String accountType;
+    @NotNull
     private BigDecimal initialBalance;
 
     public CreateAccountDTO() {

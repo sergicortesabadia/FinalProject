@@ -1,11 +1,9 @@
 package com.Ironhack.FinalProject.accountmodels;
 
-import com.Ironhack.FinalProject.enums.AccountStatus;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
 
 import javax.persistence.Entity;
-import java.time.LocalDate;
 
 @Entity
 public class StudentCheckingAccount extends Account{

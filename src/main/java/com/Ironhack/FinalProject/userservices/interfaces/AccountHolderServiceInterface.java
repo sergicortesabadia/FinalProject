@@ -7,6 +7,7 @@ import com.Ironhack.FinalProject.accountmodels.CheckingAccount;
 import com.Ironhack.FinalProject.accountmodels.Savings;
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.usermodels.AccountHolder;
+import com.Ironhack.FinalProject.usermodels.User;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,4 +21,5 @@ public interface AccountHolderServiceInterface {
     AccountHolder createUserAccount(AccountHolderCreationDTO accountHolderCreationDTO);
     AccountHolder createAddressAsUser(String username, AddressDTO addressDTO);
     AccountHolder createMailingAddressAsUser(String username, AddressDTO addressDTO);
+    User changePassword(String username, String oldPassword, String newPassword, String repeatPassword);
 }

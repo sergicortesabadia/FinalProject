@@ -1,10 +1,12 @@
 package com.Ironhack.FinalProject.DTOs;
 
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ModifyBalanceDTO {
-
+    @NotNull
     private Long accountId;
+    @NotNull
     private BigDecimal amount;
 
     public ModifyBalanceDTO() {

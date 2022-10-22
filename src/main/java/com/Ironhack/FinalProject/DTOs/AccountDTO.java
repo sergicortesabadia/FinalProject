@@ -2,19 +2,17 @@ package com.Ironhack.FinalProject.DTOs;
 
 import com.Ironhack.FinalProject.embeddables.Money;
 import com.Ironhack.FinalProject.enums.AccountStatus;
-import com.Ironhack.FinalProject.usermodels.AccountHolder;
 
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.time.LocalDate;
+
 
 public class AccountDTO {
-@NotNull
+    @NotNull
     private Long accountNumber;
-@NotNull
+    @NotNull
     private Money balance;
     private String primaryOwner;
-    private String secondaryOwner; //optional
+    private String secondaryOwner;
     private int secretKey;
     private AccountStatus accountStatus;
     private Long accountHolderId;

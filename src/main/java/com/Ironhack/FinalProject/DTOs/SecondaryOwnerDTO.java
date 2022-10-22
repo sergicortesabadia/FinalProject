@@ -1,8 +1,11 @@
 package com.Ironhack.FinalProject.DTOs;
 
-public class SecondaryOwnerDTO {
+import javax.validation.constraints.NotNull;
 
+public class SecondaryOwnerDTO {
+    @NotNull
     private Long accountNumber;
+    @NotNull
     private Long accountHolderId;
 
     public SecondaryOwnerDTO() {

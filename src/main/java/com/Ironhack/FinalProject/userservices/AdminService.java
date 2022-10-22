@@ -17,7 +17,6 @@ import com.Ironhack.FinalProject.usermodels.Admin;
 import com.Ironhack.FinalProject.usermodels.ThirdParty;
 import com.Ironhack.FinalProject.usermodels.User;
 import com.Ironhack.FinalProject.userservices.interfaces.AdminServiceInterface;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

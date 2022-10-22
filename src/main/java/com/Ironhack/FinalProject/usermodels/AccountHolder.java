@@ -12,8 +12,6 @@ import java.util.List;
 public class AccountHolder extends User{
 private String mail;
 private Long phone;
-    //@Column(unique = true)
-//@NotNull
 private String name;
 private LocalDate birthDate;
 @Embedded

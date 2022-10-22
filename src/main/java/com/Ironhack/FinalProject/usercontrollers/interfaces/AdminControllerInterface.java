@@ -6,6 +6,8 @@ import com.Ironhack.FinalProject.usermodels.AccountHolder;
 import com.Ironhack.FinalProject.usermodels.Admin;
 import com.Ironhack.FinalProject.usermodels.ThirdParty;
 import com.Ironhack.FinalProject.usermodels.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -26,6 +28,7 @@ public interface AdminControllerInterface {
     ThirdParty createThirdParty(ThirdParty thirdParty);
     AccountHolder createAddress(AddressDTO addressDTO);
     AccountHolder createMailingAddress(AddressDTO addressDTO);
+    User changePasswordAsAdmin(UserDetails userDetails, ChangePassWordDTO changePassWordDTO);
 
 }
 
