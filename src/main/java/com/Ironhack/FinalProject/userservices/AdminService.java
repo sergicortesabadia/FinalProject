@@ -141,12 +141,14 @@ public Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO){
     return accountRepository.save(account);
     }
     public Admin createAdmin (Admin admin){
+    adminRepository.save(admin);
     roleRepository.save(new Role(RolesEnum.ADMIN, admin));
-    return adminRepository.save(admin);
+    return admin;
     }
     public ThirdParty createThirdParty(ThirdParty thirdParty){
+    thirdPartyRepository.save(thirdParty);
     roleRepository.save(new Role(RolesEnum.THIRD_PARTY, thirdParty));
-    return thirdPartyRepository.save(thirdParty);
+    return thirdParty;
     }
     public AccountHolder createAddress(AddressDTO addressDTO){
     AccountHolder accountHolder = accountHolderRepository.findById(addressDTO.getAccountHolderId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
