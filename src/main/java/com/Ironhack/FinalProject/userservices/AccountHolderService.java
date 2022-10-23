@@ -19,6 +19,7 @@ import com.Ironhack.FinalProject.usermodels.User;
 import com.Ironhack.FinalProject.userservices.interfaces.AccountHolderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
@@ -54,6 +55,8 @@ public class AccountHolderService implements AccountHolderServiceInterface {
     CheckingAccountServiceInterface checkingAccountServiceInterface;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     public Money getBalance(String username, Long accountNumber) {
         AccountHolder accountHolder = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
@@ -158,7 +161,7 @@ public class AccountHolderService implements AccountHolderServiceInterface {
     }
     public AccountHolder createUserAccount(AccountHolderCreationDTO accountHolderCreationDTO){
         Address address = new Address(accountHolderCreationDTO.getStreet(), accountHolderCreationDTO.getCity(), accountHolderCreationDTO.getPostalCode(), accountHolderCreationDTO.getProvinceState(), accountHolderCreationDTO.getCountry());
-        AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(), "1234", accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
+        AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(), passwordEncoder.encode("1234"), accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
         accountHolder.addRole(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder));
         accountHolderRepository.save(accountHolder);
         roleRepository.save(new Role(RolesEnum.ADMIN, accountHolder));
@@ -178,9 +181,9 @@ public class AccountHolderService implements AccountHolderServiceInterface {
     }
     public User changePassword(String username, String oldPassword, String newPassword, String repeatPassword){
         User user = userRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        if(!user.getPassword().equals(oldPassword)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        if(!passwordEncoder.matches(oldPassword, user.getPassword())) throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT);
         if(!newPassword.equals(repeatPassword)) throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "The repeated password is different from the first entry");
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword));
         return userRepository.save(user);
     }
 }

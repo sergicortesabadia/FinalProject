@@ -19,6 +19,7 @@ import com.Ironhack.FinalProject.usermodels.User;
 import com.Ironhack.FinalProject.userservices.interfaces.AdminServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -49,6 +50,8 @@ public class AdminService implements AdminServiceInterface {
     ThirdPartyRepository thirdPartyRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
 
 public Account addBalance(ModifyBalanceDTO modifyBalanceDTO){
@@ -74,7 +77,7 @@ public Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO){
 
     public Account createNewUserAndAccount(AccountHolderCreationDTO accountHolderCreationDTO){
     Address address = new Address(accountHolderCreationDTO.getStreet(), accountHolderCreationDTO.getCity(), accountHolderCreationDTO.getPostalCode(), accountHolderCreationDTO.getProvinceState(), accountHolderCreationDTO.getCountry());
-    AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(),"1234", accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
+    AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(),passwordEncoder.encode("1234"), accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
     accountHolderRepository.save(accountHolder);
     roleRepository.save(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder));
     String accountType = accountHolderCreationDTO.getAccountType();
@@ -140,12 +143,14 @@ public Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO){
     account.setSecondaryOwner(accountHolder);
     return accountRepository.save(account);
     }
-    public Admin createAdmin (Admin admin){
+    public Admin createAdmin (CreateAdminDTO createAdminDTO){
+    Admin admin = new Admin(createAdminDTO.getUsername(), passwordEncoder.encode(createAdminDTO.getPassword()));
     adminRepository.save(admin);
     roleRepository.save(new Role(RolesEnum.ADMIN, admin));
     return admin;
     }
-    public ThirdParty createThirdParty(ThirdParty thirdParty){
+    public ThirdParty createThirdParty(CreateThirdPartyDTO createThirdPartyDTO){
+    ThirdParty thirdParty = new ThirdParty(createThirdPartyDTO.getUsername(), passwordEncoder.encode(createThirdPartyDTO.getPassword()), createThirdPartyDTO.getHashedKey());
     thirdPartyRepository.save(thirdParty);
     roleRepository.save(new Role(RolesEnum.THIRD_PARTY, thirdParty));
     return thirdParty;

@@ -24,8 +24,8 @@ public interface AdminControllerInterface {
     Account createNewAccount(CreateAccountDTO createAccountDTO);
     Account assignSecondaryOwner (SecondaryOwnerDTO secondaryOwnerDTO);
     AccountHolder createUserAccount(AccountHolderCreationDTO accountHolderCreationDTO);
-    Admin createAdmin (Admin admin);
-    ThirdParty createThirdParty(ThirdParty thirdParty);
+    Admin createAdmin (CreateAdminDTO createAdminDTO);
+    ThirdParty createThirdParty(CreateThirdPartyDTO createThirdPartyDTO);
     AccountHolder createAddress(AddressDTO addressDTO);
     AccountHolder createMailingAddress(AddressDTO addressDTO);
     User changePasswordAsAdmin(UserDetails userDetails, ChangePassWordDTO changePassWordDTO);

@@ -84,14 +84,14 @@ public class AdminController implements AdminControllerInterface {
     }
     @PostMapping("/create_admin")
     @ResponseStatus(HttpStatus.CREATED)
-    public Admin createAdmin (@RequestBody Admin admin){
-        return adminServiceInterface.createAdmin(admin);
+    public Admin createAdmin (@RequestBody CreateAdminDTO createAdminDTO){
+        return adminServiceInterface.createAdmin(createAdminDTO);
     }
 
     @PostMapping("/create_third_party")
     @ResponseStatus(HttpStatus.CREATED)
-    public ThirdParty createThirdParty(@RequestBody ThirdParty thirdParty){
-        return adminServiceInterface.createThirdParty(thirdParty);
+    public ThirdParty createThirdParty(@RequestBody CreateThirdPartyDTO createThirdPartyDTO){
+        return adminServiceInterface.createThirdParty(createThirdPartyDTO);
     }
     @PostMapping("/create_address")
     @ResponseStatus(HttpStatus.CREATED)

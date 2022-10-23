@@ -1,5 +1,7 @@
 package com.Ironhack.FinalProject.DTOs;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -46,7 +48,7 @@ public class AccountHolderCreationDTO {
         setBirthDate(birthDate);
     }
 
-    public AccountHolderCreationDTO(String street, String city, String postalCode, String provinceState, String country, String username, String name, String mail, Long phone, LocalDate birthDate, String accountType, BigDecimal initialBalance) {
+    public AccountHolderCreationDTO(String street, String city, String postalCode, String provinceState, String country, String username, String name, String mail, Long phone, @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate, String accountType, BigDecimal initialBalance) {
         setStreet(street);
         setCity(city);
         setPostalCode(postalCode);

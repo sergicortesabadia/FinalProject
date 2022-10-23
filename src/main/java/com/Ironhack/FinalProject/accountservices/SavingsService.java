@@ -26,7 +26,7 @@ public class SavingsService implements SavingsServiceInterface {
     public Savings createSavings (AccountHolder accountHolder, BigDecimal initialBalance){
         Savings savings = new Savings();
         savings.setPrimaryOwner(accountHolder);
-        if (initialBalance.compareTo(savings.getMinimumBalance().getAmount()) < 0) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Initial balance must be over "+savings.getMinimumBalance().getAmount());
+        if (initialBalance.compareTo(savings.getMinimumBalance().getAmount()) == -1) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Initial balance must be over "+savings.getMinimumBalance().getAmount());
         savings.setPrimaryOwner(accountHolder);
         savings.setSecretKey(0000);
         savings.setAccountStatus(AccountStatus.ACTIVE);

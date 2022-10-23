@@ -21,8 +21,8 @@ public interface AdminServiceInterface {
     List<User> getAllUsers();
     Account createNewAccount(CreateAccountDTO createAccountDTO);
     Account assignSecondaryOwner (Long accountNumber, Long accountHolderId);
-    Admin createAdmin (Admin admin);
-    ThirdParty createThirdParty(ThirdParty thirdParty);
+    Admin createAdmin (CreateAdminDTO createAdminDTO);
+    ThirdParty createThirdParty(CreateThirdPartyDTO createThirdPartyDTO);
     AccountHolder createAddress(AddressDTO addressDTO);
     AccountHolder createMailingAddress(AddressDTO addressDTO);
 }
