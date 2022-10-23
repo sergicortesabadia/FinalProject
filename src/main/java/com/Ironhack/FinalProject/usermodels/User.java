@@ -18,7 +18,7 @@ public abstract class User {
     @Column(nullable = false)
     private String password;
 
-   @OneToMany(mappedBy = "user")
+   @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
    @JsonIgnore
    private List<Role> roles = new ArrayList<>();
 

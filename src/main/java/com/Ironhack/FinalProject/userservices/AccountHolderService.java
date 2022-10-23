@@ -52,6 +52,8 @@ public class AccountHolderService implements AccountHolderServiceInterface {
     TransactionServiceInterface transactionServiceInterface;
     @Autowired
     CheckingAccountServiceInterface checkingAccountServiceInterface;
+    @Autowired
+    RoleRepository roleRepository;
 
     public Money getBalance(String username, Long accountNumber) {
         AccountHolder accountHolder = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
@@ -158,8 +160,9 @@ public class AccountHolderService implements AccountHolderServiceInterface {
         Address address = new Address(accountHolderCreationDTO.getStreet(), accountHolderCreationDTO.getCity(), accountHolderCreationDTO.getPostalCode(), accountHolderCreationDTO.getProvinceState(), accountHolderCreationDTO.getCountry());
         AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(), "1234", accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
         accountHolder.addRole(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder));
-        userRepository.save(accountHolder);
-        return accountHolderRepository.save(accountHolder);
+        accountHolderRepository.save(accountHolder);
+        roleRepository.save(new Role(RolesEnum.ADMIN, accountHolder));
+        return accountHolder;
     }
     public AccountHolder createAddressAsUser(String username, AddressDTO addressDTO){
         AccountHolder accountHolder = accountHolderRepository.findByUsername(username).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));

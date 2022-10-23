@@ -47,6 +47,8 @@ public class AdminService implements AdminServiceInterface {
     StudentCheckingAccountServiceInterface studentCheckingAccountServiceInterface;
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
+    @Autowired
+    RoleRepository roleRepository;
 
 
 public Account addBalance(ModifyBalanceDTO modifyBalanceDTO){
@@ -74,6 +76,7 @@ public Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO){
     Address address = new Address(accountHolderCreationDTO.getStreet(), accountHolderCreationDTO.getCity(), accountHolderCreationDTO.getPostalCode(), accountHolderCreationDTO.getProvinceState(), accountHolderCreationDTO.getCountry());
     AccountHolder accountHolder = new AccountHolder(accountHolderCreationDTO.getUsername(),"1234", accountHolderCreationDTO.getMail(), accountHolderCreationDTO.getPhone(), accountHolderCreationDTO.getName(), accountHolderCreationDTO.getBirthDate(), address);
     accountHolderRepository.save(accountHolder);
+    roleRepository.save(new Role(RolesEnum.ACCOUNT_HOLDER, accountHolder));
     String accountType = accountHolderCreationDTO.getAccountType();
     BigDecimal initialBalance = accountHolderCreationDTO.getInitialBalance();
     while(true){
@@ -138,11 +141,11 @@ public Account decreaseBalance(ModifyBalanceDTO modifyBalanceDTO){
     return accountRepository.save(account);
     }
     public Admin createAdmin (Admin admin){
-    admin.addRole(new Role(RolesEnum.ADMIN, admin));
+    roleRepository.save(new Role(RolesEnum.ADMIN, admin));
     return adminRepository.save(admin);
     }
     public ThirdParty createThirdParty(ThirdParty thirdParty){
-    thirdParty.addRole(new Role(RolesEnum.THIRD_PARTY, thirdParty));
+    roleRepository.save(new Role(RolesEnum.THIRD_PARTY, thirdParty));
     return thirdPartyRepository.save(thirdParty);
     }
     public AccountHolder createAddress(AddressDTO addressDTO){
