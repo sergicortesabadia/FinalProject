@@ -95,7 +95,12 @@ public class AdminControllerTests {
 
     @AfterEach
     public void tearUp(){
-
+    /*    adminRepository.deleteAll();
+        savingsRepository.deleteAll();
+        checkingAccountRepository.deleteAll();
+        studentCheckingAccountRepository.deleteAll();
+        creditCardRepository.deleteAll();
+        accountHolderRepository.deleteAll();*/
     }
 
     @Test
@@ -169,8 +174,8 @@ public class AdminControllerTests {
     @WithMockUser("bengi")
     @DisplayName("Testing create Admin")
     void post_CreateAdmin_isOk() throws Exception {
-        Admin admin = new Admin("serk", "1234");
-        String body = objectMapper.writeValueAsString(admin);
+        CreateAdminDTO createAdminDTO = new CreateAdminDTO("serk", "1234");
+        String body = objectMapper.writeValueAsString(createAdminDTO);
         MvcResult mvcResult = mockMvc.perform(post("/create_admin").content(body).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isCreated()).andReturn();
         assertTrue(mvcResult.getResponse().getContentAsString().contains("serk"));
     }
